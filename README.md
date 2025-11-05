@@ -8,6 +8,7 @@ This tool allows you to automate removing tiktok annoying outro at the end, spec
 
 - openCV
 - numpy 
+- ffmpeg
 - Python
 
 ## TODO

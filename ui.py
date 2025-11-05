@@ -12,15 +12,19 @@ class appGui(tk.Tk):
         
         self.appUi()
 
+    def testCommand(self):
+        print("Button clicked")
+    
     def appUi(self):
-        toolbar = tk.Frame(self, bg="#575353")
+
+        toolbar = tk.Frame(self, bg="#1e1e1e")
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
         def buttonBuilder(text, cmd):
             button = tk.Button(toolbar, text=text, command=cmd)
             button.pack(side=tk.LEFT, padx=4, pady=4)
 
-        buttonBuilder(text="Choose dir")
+        buttonBuilder(text="Choose dir", cmd=self.testCommand)
 
 app = appGui()
 app.mainloop()
