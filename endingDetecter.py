@@ -1,15 +1,6 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import tkinter as tk
-import os
-
-class appGui(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        
-        self.title("Tiktok Ending Detecter & Remover")
-        self.geometry("1280x720")
 
 def endingDetecter(video):
     videoInput = cv2.VideoCapture(f"{video}")
@@ -41,6 +32,3 @@ def endingDetecter(video):
 
         if percentageOf > 25:
             return frameNumber
-        
-app = appGui()
-app.mainloop()
