@@ -9,10 +9,21 @@ This tool allows you to automate removing tiktok annoying outro at the end, spec
 - openCV
 - numpy 
 - ffmpeg
+- tkinter
 - Python
+
+## Setting it up:
+```bash
+git clone -b development https://github.com/eepyminded/tiktok-outro-remover.git
+cd tiktok-outro-remover
+python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+```
 
 ## TODO
 - ✅ Function  detecting what frame does the ending start
+- ✅ Checking videos in a chosen folder, saving the original ones
+- ✅ Program functioning correctly
+- 🔄 Proper error handling
+- 🔄 Proper tests
 - 🔄 Elegant GUI
-- 🔄 changing tolerance (models?) of detection
-- 🔄 checking videos in a chosen folder, saving the original ones
+- 🔄 Changing tolerance (models?) of detection
