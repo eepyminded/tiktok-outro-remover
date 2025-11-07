@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def endingDetecter(video):
+def endingDetect(video):
     videoInput = cv2.VideoCapture(f"{video}")
     frameNumber = 0
 
@@ -15,7 +15,7 @@ def endingDetecter(video):
 
         imageHsv = cv2.cvtColor(frameInput, cv2.COLOR_BGR2HSV)
 
-        # the hue, saturation and value of the tiktok pixels after changing from bgr to rgb
+        # the hue, saturation and value of the tiktok pixels after changing from bgr to hsv
         hueOf, saturationOf, valueOf = 120, 121, 26
         detectionTolerance = 10 
 
@@ -30,4 +30,4 @@ def endingDetecter(video):
         percentageOf = (maskPixels / totalPixels) * 100
 
         if percentageOf > 25:
-            return frameNumber
+            return frameNumber - 1

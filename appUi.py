@@ -1,19 +1,16 @@
 import tkinter as tk
 from tkinter import filedialog, ttk
 import os
-import endingDetecter
+import fileLooper
 
 class appGui(tk.Tk):
     def __init__(self):
         super().__init__()
         
         self.title("Tiktok Ending Detecter & Remover")
-        self.geometry("1280x720")
+        self.geometry("500x500")
         
         self.appUi()
-
-    def testCommand(self):
-        print("Button clicked")
     
     def appUi(self):
 
@@ -22,9 +19,16 @@ class appGui(tk.Tk):
 
         def buttonBuilder(text, cmd):
             button = tk.Button(toolbar, text=text, command=cmd)
-            button.pack(side=tk.LEFT, padx=4, pady=4)
+            button.pack(side=tk.TOP, padx=4, pady=4)
 
-        buttonBuilder(text="Choose dir", cmd=self.testCommand)
+        buttonBuilder(text="Choose dir", cmd=self.chooseDirectory)
+    
+        self.appResponse = tk.Label(self, text="Work In Progress!", font=("Arial, 20"))
+        self.appResponse.pack()
+
+    def chooseDirectory(self):
+        convResponse = fileLooper.fileLooper(filedialog.askdirectory())   
+
 
 app = appGui()
 app.mainloop()
