@@ -24,7 +24,7 @@ python appUi.py
 - ✅ Function  detecting what frame does the ending start
 - ✅ Checking videos in a chosen folder, saving the original ones
 - ✅ Program functioning correctly
-- 🔄 Proper error handling
+- ✅ Proper error handling
 - 🔄 Proper tests
 - 🔄 Elegant GUI
 - 🔄 Changing tolerance (models?) of detection

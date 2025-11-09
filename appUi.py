@@ -46,9 +46,15 @@ class AppGui(tk.Tk):
         except PermissionError as e:
             self.app_response.config(fg="red")
             self.answer_text.set(f"{e}")
+
+        # sometimes filedialog returns weird paths even when clicking cancel, we handle it quietly
+        except fileLooper.NotStringError as e:
+            self.answer_text.set("")
+        except fileLooper.InvalidPathError as e:
+            self.answer_text.set("")
         except:
             self.app_response.config(fg="red")
-            self.answer_text.set("An unknown error occurred")
+            self.answer_text.set(f"An unexpected error occurred")
 
 app = AppGui()
 app.mainloop()

@@ -1,13 +1,31 @@
 import os
+from pyexpat.errors import messages
+
 import endingDetecter
 import endingRemover
 
+class NotStringError(Exception):
+    def __init__(self, var):
+        super().__init__(self, var)
+        self.var = var
+
+class InvalidPathError(Exception):
+    def __init__(self, path):
+        super().__init__()
+        self.path = path
+
 def loop_through_files(directory):
-    files = []
+    if not isinstance(directory, str):
+        raise NotStringError(directory)
+
+    if not os.access(directory, os.F_OK):
+        raise InvalidPathError(directory)
 
     # check if we can read and write in that directory
     if not os.access(directory, os.R_OK) or not os.access(directory, os.W_OK):
         raise PermissionError(f"ERROR: Not enough permissions to manage files in {directory} dir!")
+
+    files = []
 
     for file in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, file)):
