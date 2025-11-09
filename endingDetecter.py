@@ -1,33 +1,33 @@
 import cv2
 import numpy as np
 
-def endingDetect(video):
-    videoInput = cv2.VideoCapture(f"{video}")
-    frameNumber = 0
+def ending_detect(video):
+    video_input = cv2.VideoCapture(f"{video}")
+    frame_number = 0
 
-    while videoInput.isOpened():
-        frameNumber = frameNumber + 1
-        success, frameInput = videoInput.read()
+    while video_input.isOpened():
+        frame_number = frame_number + 1
+        success, frame_input = video_input.read()
 
         # if frame is read correctly success is True, function returns false if no ending is detected
         if not success:
-            return False
+            return {"detected": False}
 
-        imageHsv = cv2.cvtColor(frameInput, cv2.COLOR_BGR2HSV)
+        image_hsv = cv2.cvtColor(frame_input, cv2.COLOR_BGR2HSV)
 
         # the hue, saturation and value of the tiktok pixels after changing from bgr to hsv
-        hueOf, saturationOf, valueOf = 120, 121, 26
-        detectionTolerance = 10 
+        hue_of, saturation_of, value_of = 120, 121, 26
+        detection_tolerance = 10
 
         #setting up the tolerances, bigger for saturation and value
-        lowerBound = np.array([hueOf - detectionTolerance, saturationOf - detectionTolerance - 10, valueOf - detectionTolerance - 10])
-        upperBound = np.array([hueOf + detectionTolerance, saturationOf + detectionTolerance + 10, valueOf + detectionTolerance + 10])
+        lower_bound = np.array([hue_of - detection_tolerance, saturation_of - detection_tolerance - 10, value_of - detection_tolerance - 10])
+        upper_bound = np.array([hue_of + detection_tolerance, saturation_of + detection_tolerance + 10, value_of + detection_tolerance + 10])
 
-        mask = cv2.inRange(imageHsv, lowerBound, upperBound)
-        maskPixels = cv2.countNonZero(mask)
-        totalPixels = frameInput.shape[0] * frameInput.shape[1]
+        mask = cv2.inRange(image_hsv, lower_bound, upper_bound)
+        mask_pixels = cv2.countNonZero(mask)
+        total_pixels = frame_input.shape[0] * frame_input.shape[1]
 
-        percentageOf = (maskPixels / totalPixels) * 100
+        percentage_of = (mask_pixels / total_pixels) * 100
 
-        if percentageOf > 25:
-            return frameNumber - 1
+        if percentage_of > 25:
+            return {"detected": True, "frames": frame_number - 2}

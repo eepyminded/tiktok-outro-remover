@@ -2,8 +2,12 @@ import os
 import endingDetecter
 import endingRemover
 
-def fileLooper(directory):
+def loop_through_files(directory):
     files = []
+
+    # check if we can read and write in that directory
+    if not os.access(directory, os.R_OK) or not os.access(directory, os.W_OK):
+        raise PermissionError(f"ERROR: Not enough permissions to manage files in {directory} dir!")
 
     for file in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, file)):
@@ -11,14 +15,26 @@ def fileLooper(directory):
         else:
             continue
 
+    video_with_ending_amount = 0
+    video_amount = 0
+
     for file in files:
         if file.endswith((".mp4", ".webm", ".mov", "mkv")):
-            splitFile = os.path.splitext(file)
-            videoExtension = splitFile[1]
-            videoFrame = endingDetecter.endingDetect(file)
+            video_amount += 1
+            split_file = os.path.splitext(file)
+            video_extension = split_file[1]
 
+            #using os to check permissions because opencv doesn't raise an exception when it can't open a file
+            if not os.access(file, os.R_OK) or not os.access(file, os.W_OK):
+                raise PermissionError(f"ERROR: Not enough permissions to read {file}")
+
+            video_ending_info = endingDetecter.ending_detect(file)
+            print(video_ending_info)
             # no ending detected
-            if videoFrame == False:
+            if not video_ending_info["detected"]:
                 continue
             else:
-                endingRemover.endRemove(file, videoFrame, videoExtension)
+                video_with_ending_amount += 1
+                endingRemover.end_remove(file, video_ending_info["frames"], video_extension)
+
+    return {"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount}

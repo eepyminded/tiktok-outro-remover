@@ -12,11 +12,12 @@ This tool allows you to automate removing tiktok annoying outro at the end, spec
 - tkinter
 - Python
 
-## Setting it up:
+## Setting it up and running:
 ```bash
 git clone -b development https://github.com/eepyminded/tiktok-outro-remover.git
 cd tiktok-outro-remover
 python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+python appUi.py
 ```
 
 ## TODO
