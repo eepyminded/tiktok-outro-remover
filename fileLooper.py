@@ -14,7 +14,7 @@ class InvalidPathError(Exception):
         super().__init__()
         self.path = path
 
-def loop_through_files(directory):
+def loop_through_files(directory,  keep_original_video):
     if not isinstance(directory, str):
         raise NotStringError(directory)
 
@@ -53,6 +53,6 @@ def loop_through_files(directory):
                 continue
             else:
                 video_with_ending_amount += 1
-                endingRemover.end_remove(file, video_ending_info["frames"], video_extension)
+                endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video)
 
     return {"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount}

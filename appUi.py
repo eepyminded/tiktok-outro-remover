@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 
 import endingRemover
 import fileLooper
@@ -10,8 +11,11 @@ class AppGui(tk.Tk):
     def __init__(self):
         super().__init__()
 
+        self.check_org_video = None
+        self.keep_original_value = None
         self.answer_text = None
         self.app_response = None
+        self.keep_original_video = tk.BooleanVar()
         self.title("Tiktok Ending Detecter & Remover")
         self.geometry("1280x720")
         
@@ -28,13 +32,17 @@ class AppGui(tk.Tk):
 
         button_builder(text = "Choose dir", cmd = self.choose_directory)
 
+        self.check_org_video = ttk.Checkbutton(self, text = "Keep Original Video", variable = self.keep_original_video)
+        self.check_org_video.pack(side=tk.TOP, padx=4, pady=4)
+
         self.answer_text = tk.StringVar()
-        self.app_response = tk.Label(self, textvariable = self.answer_text, font = "Arial, 18")
+        self.app_response = tk.Label(self, textvariable = self.answer_text, font = "Arial, 16")
         self.app_response.pack()
 
     def choose_directory(self):
         try:
-            modules_response = fileLooper.loop_through_files(filedialog.askdirectory())
+            self.keep_original_value = self.keep_original_video.get()
+            modules_response = fileLooper.loop_through_files(filedialog.askdirectory(), self.keep_original_value)
             self.app_response.config(fg="green")
             self.answer_text.set(f"SUCCESS: Amount of videos in your folder: {modules_response["video_amount"]}, videos that endings got removed from: {modules_response["video_with_ending_amount"]}")
         except endingRemover.RemovalError:
