@@ -1,5 +1,4 @@
 import os
-from pyexpat.errors import messages
 
 import endingDetecter
 import endingRemover
@@ -14,7 +13,25 @@ class InvalidPathError(Exception):
         super().__init__()
         self.path = path
 
-def loop_through_files(directory,  keep_original_video):
+def files_count(directory):
+    if not isinstance(directory, str):
+        raise NotStringError(directory)
+
+    if not os.access(directory, os.F_OK):
+        raise InvalidPathError(directory)
+
+    if not os.access(directory, os.R_OK) or not os.access(directory, os.W_OK):
+        raise PermissionError(f"ERROR: Not enough permissions to manage files in {directory} dir!")
+
+    file_amount = 0
+
+    for file in os.listdir(directory):
+        file_amount += 1
+
+    print(file_amount)
+    return file_amount
+
+def loop_through_files(directory,  keep_original_video, keep_has_original_in, progress_queue):
     if not isinstance(directory, str):
         raise NotStringError(directory)
 
@@ -26,6 +43,7 @@ def loop_through_files(directory,  keep_original_video):
         raise PermissionError(f"ERROR: Not enough permissions to manage files in {directory} dir!")
 
     files = []
+    amount_of_files = 0
 
     for file in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, file)):
@@ -37,7 +55,16 @@ def loop_through_files(directory,  keep_original_video):
     video_amount = 0
 
     for file in files:
+        # sending back to GUI amount of files that already has been worked through
+        amount_of_files += 1
+        progress_queue.put(amount_of_files)
+
         if file.endswith((".mp4", ".webm", ".mov", "mkv")):
+
+            # check if it has *original* string in the file, if it does we skip the file (user choice)
+            if keep_has_original_in and "original" in file:
+                continue
+
             video_amount += 1
             split_file = os.path.splitext(file)
             video_extension = split_file[1]
@@ -55,4 +82,5 @@ def loop_through_files(directory,  keep_original_video):
                 video_with_ending_amount += 1
                 endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video)
 
-    return {"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount}
+    progress_queue.put({"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount})
+    return
