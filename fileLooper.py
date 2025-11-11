@@ -28,33 +28,44 @@ def files_count(directory):
     for file in os.listdir(directory):
         file_amount += 1
 
-    print(file_amount)
     return file_amount
 
-def loop_through_files(directory,  keep_original_video, keep_has_original_in, progress_queue):
+def loop_through_files(directory, keep_original_video, keep_has_original_in, progress_queue, same_output_dir_var, output_dir):
     if not isinstance(directory, str):
         raise NotStringError(directory)
 
     if not os.access(directory, os.F_OK):
         raise InvalidPathError(directory)
 
-    # check if we can read and write in that directory
-    if not os.access(directory, os.R_OK) or not os.access(directory, os.W_OK):
-        raise PermissionError(f"ERROR: Not enough permissions to manage files in {directory} dir!")
+    # check if we can read and write in input directory
+    if not os.access(directory, os.R_OK) and not os.access(directory, os.W_OK):
+        raise PermissionError(f"ERROR: Not enough permissions to manage files in chosen dir!")
 
-    files = []
+    # if user wants other output dir, check also for its permissions
+    if not same_output_dir_var and not os.access(output_dir, os.R_OK) and not os.access(output_dir, os.W_OK):
+        raise PermissionError(f"ERROR: Not enough permissions to manage files in chosen dir!")
+
+    # also we need to check if user wants the same output path as the input, or chosen by them
+    if same_output_dir_var:
+        output_dir = directory
+    else:
+        output_dir = output_dir
+
+    files_only_name = []
+    files_wth_path = []
     amount_of_files = 0
 
     for file in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, file)):
-            files.append(os.path.join(directory, file))
+            files_only_name.append(file)
+            files_wth_path.append(os.path.join(directory, file))
         else:
             continue
 
     video_with_ending_amount = 0
     video_amount = 0
 
-    for file in files:
+    for file in files_wth_path:
         # sending back to GUI amount of files that already has been worked through
         amount_of_files += 1
         progress_queue.put(amount_of_files)
@@ -74,13 +85,13 @@ def loop_through_files(directory,  keep_original_video, keep_has_original_in, pr
                 raise PermissionError(f"ERROR: Not enough permissions to read {file}")
 
             video_ending_info = endingDetecter.ending_detect(file)
-            print(video_ending_info)
             # no ending detected
             if not video_ending_info["detected"]:
                 continue
             else:
                 video_with_ending_amount += 1
-                endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video)
+                # we also pass files_only_name[amount_of_files - 1], which is only the name of the video without its path, we pass directory as our input path
+                endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video, output_dir, files_only_name[amount_of_files - 1])
 
     progress_queue.put({"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount})
     return

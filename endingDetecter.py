@@ -30,4 +30,4 @@ def ending_detect(video):
         percentage_of = (mask_pixels / total_pixels) * 100
 
         if percentage_of > 25:
-            return {"detected": True, "frames": frame_number - 1}
+            return {"detected": True, "frames": frame_number - 2}

@@ -9,17 +9,19 @@ class ConversionError(Exception):
         self.message = message
         super().__init__(self.message)
 
+
 class RemovalError(Exception):
     def __init__(self, message):
         super.__init__(message)
 
-def end_remove(video, frame_number, video_extension, keep_original):
-    frame_raw = ""
-    video_name = video[:-len(video_extension)]
 
-    video_input = shutil.copy2(f"{video}", f"{video_name}_original{video_extension}")
+def end_remove(video_with_path, frame_number, video_extension, keep_original, output_dir, video_name_with_ext):
+    frame_raw = ""
+    video_name = video_with_path[:-len(video_extension)]
+
+    video_input = shutil.copy2(f"{video_with_path}", f"{video_name}_original{video_extension}")
     try:
-        os.remove(video)
+        os.remove(video_with_path)
     except PermissionError as e:
         raise RemovalError("Not enough permissions to manage your files!") from e
 
@@ -34,7 +36,8 @@ def end_remove(video, frame_number, video_extension, keep_original):
     calculated_timestamp = frame_number / frame_rate
 
     try:
-        result_of_conversion = ffmpeg.input(f"{video_input}", ss = "0", to = f"{calculated_timestamp}").output(f"{video}", c = "copy").run(overwrite_output=True)
+        result_of_conversion = ffmpeg.input(f"{video_input}", ss="0", to=f"{calculated_timestamp}").output(
+            f"{output_dir}/{video_name_with_ext}", c="copy").run(overwrite_output=True)
         if not keep_original:
             os.remove(video_input)
         return result_of_conversion
