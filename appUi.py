@@ -92,6 +92,7 @@ class AppGui(tk.Tk):
 
     def start_conversion(self):
         try:
+            self.start_button.config(state = tk.DISABLED)
             self.keep_original_value = self.keep_original_video.get()
             self.skip_original_value = self.skip_original_string.get()
             self.amount_of_files = fileLooper.files_count(self.chosen_dir_input)
@@ -150,6 +151,7 @@ class AppGui(tk.Tk):
                     self.answer_text.set(
                         f"SUCCESS: Amount of videos in your folder: {self.progressbar_progress["video_amount"]}\n"
                         f"Videos that endings got removed from: {self.progressbar_progress["video_with_ending_amount"]}")
+                    self.start_button.config(state = tk.NORMAL)
                     return
 
         except queue.Empty:

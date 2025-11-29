@@ -30,7 +30,7 @@ def files_count(directory):
 
     return file_amount
 
-def loop_through_files(directory, keep_original_video, keep_has_original_in, progress_queue, same_output_dir_var, output_dir):
+def loop_through_files(directory, keep_original_video, keep_has_original_in, progress_queue, same_output_dir_var, output_dir, ignore_progress_queue = False):
     if not isinstance(directory, str):
         raise NotStringError(directory)
 
@@ -68,7 +68,8 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
     for file in files_wth_path:
         # sending back to GUI amount of files that already has been worked through
         amount_of_files += 1
-        progress_queue.put(amount_of_files)
+        if not ignore_progress_queue:
+            progress_queue.put(amount_of_files)
 
         if file.endswith((".mp4", ".webm", ".mov", "mkv")):
 
@@ -92,6 +93,6 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
                 video_with_ending_amount += 1
                 # we also pass files_only_name[amount_of_files - 1], which is only the name of the video without its path, we pass directory as our input path
                 endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video, output_dir, files_only_name[amount_of_files - 1])
-
-    progress_queue.put({"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount})
+    if not ignore_progress_queue:
+        progress_queue.put({"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount})
     return
