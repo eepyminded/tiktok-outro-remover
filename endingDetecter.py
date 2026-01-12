@@ -20,8 +20,8 @@ def ending_detect(video):
         detection_tolerance = 10
 
         #setting up the tolerances, bigger for saturation and value
-        lower_bound = np.array([hue_of - detection_tolerance, saturation_of - detection_tolerance - 10, value_of - detection_tolerance - 10])
-        upper_bound = np.array([hue_of + detection_tolerance, saturation_of + detection_tolerance + 10, value_of + detection_tolerance + 10])
+        lower_bound = np.array([hue_of - detection_tolerance, saturation_of - detection_tolerance - 5, value_of - detection_tolerance - 5])
+        upper_bound = np.array([hue_of + detection_tolerance, saturation_of + detection_tolerance + 5, value_of + detection_tolerance + 5])
 
         mask = cv2.inRange(image_hsv, lower_bound, upper_bound)
         mask_pixels = cv2.countNonZero(mask)
