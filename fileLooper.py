@@ -66,12 +66,12 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
     video_amount = 0
 
     for file in files_wth_path:
-        # sending back to GUI amount of files that already has been worked through
-        amount_of_files += 1
-        if not ignore_progress_queue:
-            progress_queue.put(amount_of_files)
-
         if file.endswith((".mp4", ".webm", ".mov", "mkv")):
+
+            # we only want to inform user about the video type files in directory
+            amount_of_files += 1
+            if not ignore_progress_queue:
+                progress_queue.put(amount_of_files)
 
             # check if it has *original* string in the file, if it does we skip the file (user choice)
             if keep_has_original_in and "original" in file:
