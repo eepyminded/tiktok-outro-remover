@@ -19,7 +19,7 @@ def ending_detect(video):
         hue_of, saturation_of, value_of = 120, 121, 26
         detection_tolerance = 10
 
-        #setting up the tolerances, bigger for saturation and value
+        # setting up the tolerances, bigger for saturation and value
         lower_bound = np.array([hue_of - detection_tolerance, saturation_of - detection_tolerance - 5, value_of - detection_tolerance - 5])
         upper_bound = np.array([hue_of + detection_tolerance, saturation_of + detection_tolerance + 5, value_of + detection_tolerance + 5])
 
@@ -28,6 +28,9 @@ def ending_detect(video):
         total_pixels = frame_input.shape[0] * frame_input.shape[1]
 
         percentage_of = (mask_pixels / total_pixels) * 100
+        #print(f"detected amount of tiktok pixels for frame: {frame_number} is: {round(percentage_of, 2)}")
 
         if percentage_of > 25:
             return {"detected": True, "frames": frame_number - 2}
+    return {"detected": False}    
+    

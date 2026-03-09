@@ -1,7 +1,7 @@
 import os
 
-import endingDetecter
-import endingRemover
+import ending_detecter
+import ending_remover
 
 class NotStringError(Exception):
     def __init__(self, var):
@@ -39,11 +39,11 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
 
     # check if we can read and write in input directory
     if not os.access(directory, os.R_OK) and not os.access(directory, os.W_OK):
-        raise PermissionError(f"ERROR: Not enough permissions to manage files in chosen dir!")
+        raise PermissionError("ERROR: Not enough permissions to manage files in chosen dir!")
 
     # if user wants other output dir, check also for its permissions
     if not same_output_dir_var and not os.access(output_dir, os.R_OK) and not os.access(output_dir, os.W_OK):
-        raise PermissionError(f"ERROR: Not enough permissions to manage files in chosen dir!")
+        raise PermissionError("ERROR: Not enough permissions to manage files in chosen dir!")
 
     # also we need to check if user wants the same output path as the input, or chosen by them
     if same_output_dir_var:
@@ -53,7 +53,6 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
 
     files_only_name = []
     files_wth_path = []
-    amount_of_files = 0
 
     for file in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, file)):
@@ -69,9 +68,9 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
         if file.endswith((".mp4", ".webm", ".mov", "mkv")):
 
             # we only want to inform user about the video type files in directory
-            amount_of_files += 1
+            video_amount += 1
             if not ignore_progress_queue:
-                progress_queue.put(amount_of_files)
+                progress_queue.put(video_amount)
 
             # check if it has *original* string in the file, if it does we skip the file (user choice)
             if keep_has_original_in and "original" in file:
@@ -85,14 +84,14 @@ def loop_through_files(directory, keep_original_video, keep_has_original_in, pro
             if not os.access(file, os.R_OK) or not os.access(file, os.W_OK):
                 raise PermissionError(f"ERROR: Not enough permissions to read {file}")
 
-            video_ending_info = endingDetecter.ending_detect(file)
+            video_ending_info = ending_detecter.ending_detect(file)
             # no ending detected
             if not video_ending_info["detected"]:
                 continue
             else:
                 video_with_ending_amount += 1
                 # we also pass files_only_name[amount_of_files - 1], which is only the name of the video without its path, we pass directory as our input path
-                endingRemover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video, output_dir, files_only_name[amount_of_files - 1])
+                ending_remover.end_remove(file, video_ending_info["frames"], video_extension, keep_original_video, output_dir, files_only_name[video_amount - 1])
     if not ignore_progress_queue:
         progress_queue.put({"video_amount": video_amount, "video_with_ending_amount": video_with_ending_amount})
     return

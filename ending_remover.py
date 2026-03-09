@@ -1,7 +1,6 @@
 import ffmpeg
 import os
 import shutil
-from ffmpeg import overwrite_output
 
 
 class ConversionError(Exception):

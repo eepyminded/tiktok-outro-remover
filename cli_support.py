@@ -1,6 +1,6 @@
 import argparse
-import fileLooper
-import endingRemover
+import file_looper
+import ending_remover
 
 parser = argparse.ArgumentParser("Removing outros of tiktok videos")
 
@@ -22,17 +22,17 @@ else:
     same_output_val = False
 
 try:
-    fileLooper.loop_through_files(directory = args.input_folder, keep_original_video = args.remove_original,
+    file_looper.loop_through_files(directory = args.input_folder, keep_original_video = args.remove_original,
                                   keep_has_original_in = args.skip_original, same_output_dir_var = same_output_val,
                                   output_dir= args.output_folder, ignore_progress_queue = True, progress_queue = "whatever")
 
-except endingRemover.RemovalError:
+except ending_remover.RemovalError:
     print("ERROR: The app can't convert your videos because to lack of permissions.")
-except endingRemover.ConversionError as e:
+except ending_remover.ConversionError as e:
     print(f"ERROR: The app can't convert your videos because of: {e}")
 except PermissionError as e:
     print(f"{e}")
-except fileLooper.NotStringError as e:
-    print("")
-except fileLooper.InvalidPathError as e:
+except file_looper.NotStringError:
+    print("so uhm we've got a weird error, ")
+except file_looper.InvalidPathError:
     print("")

@@ -4,8 +4,8 @@ from tkinter import ttk
 import threading
 import queue
 
-import endingRemover
-import fileLooper
+import ending_remover
+import file_looper
 
 
 # noinspection PyTypeChecker
@@ -95,7 +95,7 @@ class AppGui(tk.Tk):
             self.start_button.config(state = tk.DISABLED)
             self.keep_original_value = self.keep_original_video.get()
             self.skip_original_value = self.skip_original_string.get()
-            self.amount_of_files = fileLooper.files_count(self.chosen_dir_input)
+            self.amount_of_files = file_looper.files_count(self.chosen_dir_input)
             self.file_work_progress.config(maximum=self.amount_of_files)
             self.same_output_dir_value = self.same_output_dir_var.get()
 
@@ -104,7 +104,7 @@ class AppGui(tk.Tk):
             else:
                 self.what_output_dir = self.chosen_dir_output
 
-            threaded_progress = threading.Thread(target=fileLooper.loop_through_files,
+            threaded_progress = threading.Thread(target=file_looper.loop_through_files,
                                                  args=(self.chosen_dir_input, self.keep_original_value,
                                                        self.skip_original_value, self.queue_progressbar,
                                                        self.same_output_dir_value, self.what_output_dir))
@@ -112,18 +112,18 @@ class AppGui(tk.Tk):
             threaded_progress.start()
             self.retrieve_data_progressbar()
 
-        except endingRemover.RemovalError:
+        except ending_remover.RemovalError:
             self.app_response.config(fg="red")
             self.answer_text.set("ERROR: The app can't convert your videos because to lack of permissions.")
-        except endingRemover.ConversionError as e:
+        except ending_remover.ConversionError as e:
             self.app_response.config(fg="red")
             self.answer_text.set(f"ERROR: The app can't convert your videos because of: {e}")
         except PermissionError as e:
             self.app_response.config(fg="red")
             self.answer_text.set(f"{e}")
-        except fileLooper.NotStringError as e:
+        except file_looper.NotStringError:
             self.answer_text.set("")
-        except fileLooper.InvalidPathError as e:
+        except file_looper.InvalidPathError:
             self.answer_text.set("")
 
     def choose_output_directory(self):
