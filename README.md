@@ -25,6 +25,6 @@ python appUi.py
 - ✅ Checking videos in a chosen folder, saving the original ones
 - ✅ Program functioning correctly
 - ✅ Proper error handling
-- 🔄 Proper tests
+- ✅ Proper tests
 - 🔄 Elegant GUI
 - 🔄 Changing tolerance (models?) of detection
