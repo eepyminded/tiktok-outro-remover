@@ -22,7 +22,7 @@ class TestDetectingEnding(unittest.TestCase):
         succeded_samples = []
 
         # user set
-        frame_tolerace = 10
+        frame_tolerace = 5
 
         for video_sample, frame_outro_starts in self.ending_starts_for_samples.items():
             get_detection = ending_detecter.ending_detect(f"samples/with-outro/{video_sample}")
@@ -40,12 +40,12 @@ class TestDetectingEnding(unittest.TestCase):
                 detected_frame = get_detection.get("frames", 0)
                 self.assertTrue(
                     frame_outro_starts - frame_tolerace <= detected_frame <= frame_outro_starts + frame_tolerace,
-                                f"Frame {detected_frame} is out of tolerance for {video_sample}"
+                                f"Frame {detected_frame} is out of tolerance for {video_sample}, it should've been {frame_outro_starts} +- {frame_tolerace}!"
                                 )
 
 
         print("---RESULTS---")
-        print(f"Failed detection in: {failed_samples}, succeded samples: {succeded_samples}")
+        print(f"Failed detection of outro in: {failed_samples}, detected outros: {succeded_samples}")
 
 if __name__ == '__main__':
     unittest.main()
